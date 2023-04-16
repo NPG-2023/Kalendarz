@@ -1,5 +1,7 @@
+
 def main():
-    print("Kalenarz...  Praca w toku")
+    print("Kalendarz")
+
 
 if __name__ == "__main__":
-    main() 
+    main()
