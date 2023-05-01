@@ -14,6 +14,10 @@ class Calendar:
     def addActivity(self, activity):
         self.activities.append(activity)
 
+    def removeActivity(self, activity):
+        if activity in self.activities:
+            self.activities.remove(activity)
+
     def __str__(self):
         activitiesStr = ""
         for act in self.activities:
