@@ -56,3 +56,12 @@ class Calendar:
         for actStr in data[1:]:
             cal.addActivity(Activity.fromFileFormat(actStr))
         return cal
+
+    def saveToFile(self, path):
+        with open(path, 'w') as file:
+            file.write(self.toFileFormat())
+
+    @staticmethod
+    def loadFromFile(path):
+        with open(path, 'r') as file:
+            return Calendar.fromFileFormat(file.read())

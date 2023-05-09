@@ -2,6 +2,7 @@ import unittest
 import datetime
 from activity import Activity
 from ourCalendar import Calendar
+import os
 
 
 class TestActivity(unittest.TestCase):
@@ -139,6 +140,22 @@ class TestCalendar(unittest.TestCase):
         self.assertEqual(cal.name, "calendar")
         self.assertEqual(len(cal.activities), 1)
         self.assertEqual(cal.activities[0].name, "test")
+
+    def testSaveAndLoadFromFile(self):
+        cal = Calendar("calendar")
+        date1 = datetime.datetime(2023, 4, 3, 18)
+        date2 = datetime.datetime(2023, 4, 3, 19)
+        activity = Activity("activity", date1, date2)
+        cal.addActivity(activity)
+
+        cal.saveToFile("./testCalendarSaveAndLoadFromFile.txt")
+        cal2 = Calendar.loadFromFile("./testCalendarSaveAndLoadFromFile.txt")
+
+        self.assertEqual(cal.name, cal2.name)
+        self.assertEqual(len(cal.activities), len(cal2.activities))
+        self.assertEqual(cal.activities[0].name, cal2.activities[0].name)
+
+        os.remove("./testCalendarSaveAndLoadFromFile.txt")
 
 
 if __name__ == "__main__":
