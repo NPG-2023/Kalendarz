@@ -21,6 +21,19 @@ class Activity:
         return f"{self.name} starts At {self.startDate} and ends at {self.endDate}"
     # makes the fields readonly
 
+    def toFileFormat(self):
+        return f"{self.name} {self.startDate.timestamp()} {self.endDate.timestamp()}"
+
+    @staticmethod
+    def fromFileFormat(str):
+        data = str.split(' ')
+        if len(data) != 3:
+            raise ValueError("data is not formatted correctly")
+        name = data[0]
+        startTimestamp = datetime.datetime.fromtimestamp(float(data[1]))
+        endTimestamp = datetime.datetime.fromtimestamp(float(data[2]))
+        return Activity(name, startTimestamp, endTimestamp)
+
     @property
     def name(self):
         return self._name
