@@ -1,7 +1,11 @@
+from tkinter import Tk
+from gui import CalendarGUI
 
 def main():
-    print("Kalendarz")
-
+    root = Tk()
+    my_gui = CalendarGUI(root)
+    root.mainloop()
 
 if __name__ == "__main__":
     main()
+
