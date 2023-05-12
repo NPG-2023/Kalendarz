@@ -47,7 +47,4 @@ class CalendarGUI:
         self.event_desc_entry.delete(0, END)
         self.event_hour_entry.delete(0, END)
 
-root = Tk()
-my_gui = CalendarGUI(root)
-root.mainloop()
 
