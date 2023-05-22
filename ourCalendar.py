@@ -14,6 +14,27 @@ class Calendar:
     def addActivity(self, activity):
         self.activities.append(activity)
 
+    def removeActivity(self, activity):
+        if activity in self.activities:
+            self.activities.remove(activity)
+
+    def changeActivityDates(self, activity, newStartDate, newEndDate):
+        if not (type(newStartDate) is datetime.datetime and type(newEndDate) is datetime.datetime):
+            raise ValueError("at least one of the dates is not of type datetime.datetime")
+        if activity in self.activities:
+            activity.startDate = newStartDate
+            activity.endDate = newEndDate
+        else:
+            raise ValueError("activity is not in a calendar")
+
+    def changeActivityName(self, activity, newName):
+        if not type(newName) is str:
+            raise ValueError("new name is not of type str")
+        if activity in self.activities:
+            activity.name = newName
+        else:
+            raise ValueError("activity is not in a calendar")
+
     def __str__(self):
         activitiesStr = ""
         for act in self.activities:
