@@ -63,3 +63,26 @@ class Calendar:
                 if activity.endDate > start and activity.startDate < end:
                     res.append(activity)
         return res
+
+    def toFileFormat(self):
+        contents = f"{self.name}"
+        for activity in self.activities:
+            contents += "\n" + activity.toFileFormat()
+        return contents
+
+    @staticmethod
+    def fromFileFormat(contents):
+        data = contents.split("\n")
+        cal = Calendar(data[0])
+        for actStr in data[1:]:
+            cal.addActivity(Activity.fromFileFormat(actStr))
+        return cal
+
+    def saveToFile(self, path):
+        with open(path, 'w') as file:
+            file.write(self.toFileFormat())
+
+    @staticmethod
+    def loadFromFile(path):
+        with open(path, 'r') as file:
+            return Calendar.fromFileFormat(file.read())
