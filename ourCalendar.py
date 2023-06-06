@@ -1,88 +1,78 @@
 # this file name is strange because calendar is taken by python standard library
-import datetime
+from datetime import datetime
 from activity import Activity
-
+from typing import List
 
 class Calendar:
 
-    def __init__(self, name):
-        if not type(name) is str:
-            raise ValueError("name is not of type str")
+    def __init__(self, name: str):
         self.name = name
         self.activities = []
 
-    def addActivity(self, activity):
+    def add_activity(self, activity: Activity):
         self.activities.append(activity)
 
-    def removeActivity(self, activity):
+    def remove_activity(self, activity: Activity):
         if activity in self.activities:
             self.activities.remove(activity)
 
-    def changeActivityDates(self, activity, newStartDate, newEndDate):
-        if not (type(newStartDate) is datetime.datetime and type(newEndDate) is datetime.datetime):
-            raise ValueError("at least one of the dates is not of type datetime.datetime")
+    def change_activity_dates(self, activity: Activity, new_start_date: datetime, new_end_date: datetime):
         if activity in self.activities:
-            activity.startDate = newStartDate
-            activity.endDate = newEndDate
+            activity.start_date = new_start_date
+            activity.end_date = new_end_date
         else:
-            raise ValueError("activity is not in a calendar")
+            raise LookupError("activity is not in a calendar")
 
-    def changeActivityName(self, activity, newName):
-        if not type(newName) is str:
-            raise ValueError("new name is not of type str")
+    def change_activity_name(self, activity: Activity, new_name: str):
         if activity in self.activities:
-            activity.name = newName
+            activity.name = new_name
         else:
-            raise ValueError("activity is not in a calendar")
+            raise LookupError("activity is not in a calendar")
 
-    def __str__(self):
-        activitiesStr = ""
+    def __str__(self) -> str:
+        activities_str = ""
         for act in self.activities:
-            activitiesStr += str(act) + "\n"
-        return f"{self.name} has following activities:\n{activitiesStr}"
+            activities_str += str(act) + "\n"
+        return f"{self.name} has following activities:\n{activities_str}"
 
     @property
-    def name(self):
+    def name(self) -> str:
         return self._name
 
     @name.setter
-    def name(self, newName):
-        if not type(newName) is str:
-            raise ValueError("name is not of type str")
-        self._name = newName
+    def name(self, new_name: str):
+        self._name = new_name
 
-    def getActivitiesFromRange(self, start, end, onlyInclusion=False):
-        if not (type(start) is datetime.datetime and type(end) is datetime.datetime):
-            raise ValueError("dates are not of type datetime.datetime")
+    def get_activities_from_range(self, start: datetime, end: datetime, only_inclusion: bool = False) -> List[Activity]:
         res = []
         for activity in self.activities:
-            if onlyInclusion:
-                if activity.startDate > start and activity.endDate < end:
+            if only_inclusion:
+                if activity.start_date > start and activity.end_date < end:
                     res.append(activity)
             else:
-                if activity.endDate > start and activity.startDate < end:
+                if activity.end_date > start and activity.start_date < end:
                     res.append(activity)
         return res
 
-    def toFileFormat(self):
+    def to_file_format(self):
         contents = f"{self.name}"
         for activity in self.activities:
-            contents += "\n" + activity.toFileFormat()
+            contents += "\n" + activity.to_file_format()
         return contents
 
-    @staticmethod
-    def fromFileFormat(contents):
+    @classmethod
+    def from_file_format(cls, contents: str):
         data = contents.split("\n")
-        cal = Calendar(data[0])
-        for actStr in data[1:]:
-            cal.addActivity(Activity.fromFileFormat(actStr))
+        cal = cls(data[0])
+        for act_str in data[1:]:
+            cal.add_activity(Activity.from_file_format(act_str))
         return cal
 
-    def saveToFile(self, path):
+    def save_to_file(self, path: str):
         with open(path, 'w') as file:
-            file.write(self.toFileFormat())
+            file.write(self.to_file_format())
 
-    @staticmethod
-    def loadFromFile(path):
+    @classmethod
+    def load_from_file(cls, path: str):
         with open(path, 'r') as file:
-            return Calendar.fromFileFormat(file.read())
+            return cls.from_file_format(file.read())
