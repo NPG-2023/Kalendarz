@@ -1,68 +1,56 @@
-import datetime
+from datetime import datetime
 
 
 class Activity:
 
-    def __init__(self, name, date1, date2):
-        if not (type(date1) is datetime.datetime and type(date2) is datetime.datetime):
-            raise ValueError("dates are not of type datetime.datetime")
-        if not type(name) is str:
-            raise ValueError("name is not of type string")
+    def __init__(self, name: str, date1: datetime, date2: datetime):
         if date1 > date2:
-            self._endDate = date1
-            self._startDate = date2
+            self._end_date = date1
+            self._start_date = date2
         else:
-            self._endDate = date2
-            self._startDate = date1
+            self._end_date = date2
+            self._start_date = date1
 
         self._name = name
 
-    def __str__(self):
-        return f"{self.name} starts At {self.startDate} and ends at {self.endDate}"
+    def __str__(self) -> str:
+        return f"{self.name} starts At {self.start_date} and ends at {self.end_date}"
     # makes the fields readonly
 
-    def toFileFormat(self):
-        return f"{self.name} {self.startDate.timestamp()} {self.endDate.timestamp()}"
+    def to_file_format(self) -> str:
+        return f"{self.name} {self.start_date.timestamp()} {self.end_date.timestamp()}"
 
-    @staticmethod
-    def fromFileFormat(str):
-        data = str.split(' ')
+    @classmethod
+    def from_file_format(cls, activity_srt: str):
+        data = activity_srt.split(' ')
         if len(data) != 3:
             raise ValueError("data is not formatted correctly")
         name = data[0]
-        startTimestamp = datetime.datetime.fromtimestamp(float(data[1]))
-        endTimestamp = datetime.datetime.fromtimestamp(float(data[2]))
-        return Activity(name, startTimestamp, endTimestamp)
+        start_timestamp = datetime.fromtimestamp(float(data[1]))
+        end_timestamp = datetime.fromtimestamp(float(data[2]))
+        return cls(name, start_timestamp, end_timestamp)
 
     @property
-    def name(self):
+    def name(self) -> str:
         return self._name
 
     @property
-    def startDate(self):
-        return self._startDate
+    def start_date(self) -> datetime:
+        return self._start_date
 
     @property
-    def endDate(self):
-        return self._endDate
+    def end_date(self) -> datetime:
+        return self._end_date
 
     # ensures that the types are good
     @name.setter
-    def name(self, newName):
-        if not type(newName) is str:
-            raise ValueError("name is not of type str")
-        self._name = newName
+    def name(self, new_name: str):
+        self._name = new_name
 
-    @startDate.setter
-    def startDate(self, newStartDate):
-        if not type(newStartDate) is datetime.datetime:
-            raise ValueError("date is not of type datetime.datetime")
+    @start_date.setter
+    def start_date(self, new_start_date: datetime):
+        self._start_date = new_start_date
 
-        self._newStartDate = newStartDate
-
-    @endDate.setter
-    def endDate(self, newEndDate):
-        if not type(newEndDate) is datetime.datetime:
-            raise ValueError("date is not of type datetime.datetime")
-
-        self._newEndDate = newEndDate
+    @end_date.setter
+    def end_date(self, new_end_date: datetime):
+        self._end_date = new_end_date
