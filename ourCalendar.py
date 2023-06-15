@@ -2,26 +2,12 @@
 from datetime import datetime
 from activity import Activity
 from typing import List
-import os
-
 
 class Calendar:
 
-    def __init__(self, path: str, name: str = "Kalendarz"):
-        self.path = path
-
-        if os.path.isfile(path):
-            cal = Calendar.load_from_file(path)
-            self.name = cal.name
-            self.activities = cal.activities
-        else:
-            self.name = name
-            self.activities = []
-
-    def __del__(self):
-        if not self.path:
-            return
-        self.save_to_file(self.path)
+    def __init__(self, name: str):
+        self.name = name
+        self.activities = []
 
     def add_activity(self, activity: Activity):
         self.activities.append(activity)
@@ -77,7 +63,7 @@ class Calendar:
     @classmethod
     def from_file_format(cls, contents: str):
         data = contents.split("\n")
-        cal = cls("", data[0])
+        cal = cls(data[0])
         for act_str in data[1:]:
             cal.add_activity(Activity.from_file_format(act_str))
         return cal
