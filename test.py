@@ -55,12 +55,11 @@ class TestActivity(unittest.TestCase):
 class TestCalendar(unittest.TestCase):
 
     def test_creation(self):
-        calendar = Calendar("test")
-
+        calendar = Calendar("", "test")
         self.assertEqual(calendar.name, "test")
 
     def test_add_activity(self):
-        calendar = Calendar("test")
+        calendar = Calendar("", "test")
         activity = Activity(
             "t",
             datetime(2023, 4, 3, 18),
@@ -70,7 +69,7 @@ class TestCalendar(unittest.TestCase):
         self.assertEqual(activity, calendar.activities[0])
 
     def test_remove_activity(self):
-        calendar = Calendar("test")
+        calendar = Calendar("", "test")
         activity = Activity(
             "t",
             datetime(2023, 4, 3, 18),
@@ -83,7 +82,7 @@ class TestCalendar(unittest.TestCase):
         self.assertEqual(False, activity in calendar.activities)
 
     def test_edit_name_activity(self):
-        calendar = Calendar("test")
+        calendar = Calendar("", "test")
         activity = Activity(
             "t",
             datetime(2023, 4, 3, 18),
@@ -94,7 +93,7 @@ class TestCalendar(unittest.TestCase):
         self.assertEqual("new name", calendar.activities[0].name)
 
     def test_edit_date_activity(self):
-        calendar = Calendar("test")
+        calendar = Calendar("", "test")
         activity = Activity(
             "t",
             datetime(2023, 4, 3, 18),
@@ -108,7 +107,7 @@ class TestCalendar(unittest.TestCase):
         self.assertEqual(d2, calendar.activities[0].end_date)
 
     def test_activities_from_range(self):
-        calendar = Calendar("test")
+        calendar = Calendar("", "test")
         activity1 = Activity(
             "t",
             datetime(2023, 4, 3, 18),
@@ -137,7 +136,7 @@ class TestCalendar(unittest.TestCase):
 
     def test_to_file_format(self):
 
-        cal = Calendar('calendar')
+        cal = Calendar("", "test")
 
         date1 = datetime(2023, 4, 3, 18)
         date2 = datetime(2023, 4, 3, 19)
@@ -145,23 +144,23 @@ class TestCalendar(unittest.TestCase):
 
         self.assertEqual(
             cal.to_file_format(),
-            "calendar"
+            "test"
             "\ntest 1680537600.0 1680541200.0"""
         )
 
     def test_from_file_format(self):
 
         cal = Calendar.from_file_format(
-            "calendar"
-            "\ntest 1680537600.0 1680541200.0"""
+            "test"
+            "\ntest 1680537600.0 1680541200.0"
         )
 
-        self.assertEqual(cal.name, "calendar")
+        self.assertEqual(cal.name, "test")
         self.assertEqual(len(cal.activities), 1)
         self.assertEqual(cal.activities[0].name, "test")
 
     def test_save_and_load_from_file(self):
-        cal = Calendar("calendar")
+        cal = Calendar("", "test")
         date1 = datetime(2023, 4, 3, 18)
         date2 = datetime(2023, 4, 3, 19)
         activity = Activity("activity", date1, date2)
@@ -175,6 +174,26 @@ class TestCalendar(unittest.TestCase):
         self.assertEqual(cal.activities[0].name, cal2.activities[0].name)
 
         os.remove("./testCalendarSaveAndLoadFromFile.txt")
+
+    def test_automatic_load_and_save(self):
+        with open("./testCalendarAutomaticLoadAndSave", 'w') as file:
+            file.write(
+                "test"
+                "\ntest 1680537600.0 1680541200.0"
+            )
+        cal = Calendar("./testCalendarAutomaticLoadAndSave")
+        self.assertEqual("test", cal.name)
+        self.assertEqual("test", cal.activities[0].name)
+        cal.name = "test2"
+        cal.activities[0].name = "test3"
+        del cal
+        with open("./testCalendarAutomaticLoadAndSave", 'r') as file:
+            self.assertEqual(
+                "test2"
+                "\ntest3 1680537600.0 1680541200.0",
+                file.read()
+            )
+        os.remove("./testCalendarAutomaticLoadAndSave")
 
 
 if __name__ == "__main__":
