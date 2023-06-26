@@ -30,9 +30,10 @@ class Calendar:
         if activity in self.activities:
             self.activities.remove(activity)
 
-    def change_activity_dates(self, activity: Activity, hour: str):
+    def change_activity_dates(self, activity: Activity, new_start_date: datetime, new_end_date: datetime):
         if activity in self.activities:
-            activity.hour = hour
+            activity.start_date = new_start_date
+            activity.end_date = new_end_date
         else:
             raise LookupError("activity is not in a calendar")
 
