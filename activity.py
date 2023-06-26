@@ -3,10 +3,11 @@ from datetime import datetime
 
 class Activity:
 
-    def __init__(self, name: str, date1: datetime, date2: datetime):
+    def __init__(self, name: str, date1: datetime, date2: datetime, hour: str):
         if date1 > date2:
             self._end_date = date1
             self._start_date = date2
+            self._hour = None
         else:
             self._end_date = date2
             self._start_date = date1
@@ -35,6 +36,10 @@ class Activity:
         return self._name
 
     @property
+    def hour(self) -> str:
+        return self._hour
+
+    @property
     def start_date(self) -> datetime:
         return self._start_date
 
@@ -46,6 +51,10 @@ class Activity:
     @name.setter
     def name(self, new_name: str):
         self._name = new_name
+
+    @hour.setter
+    def hour(self, new_hour: str):
+        self._hour = new_hour
 
     @start_date.setter
     def start_date(self, new_start_date: datetime):
