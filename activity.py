@@ -14,7 +14,7 @@ class Activity:
         self._name = name
 
     def __str__(self) -> str:
-        return f"{self.name} starts At {self.start_date} and ends at {self.end_date}"
+        return f"{self.name} zaczyna się: {self.start_date} i kończy: {self.end_date}"
     # makes the fields readonly
 
     def to_file_format(self) -> str:
