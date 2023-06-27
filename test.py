@@ -24,7 +24,7 @@ class TestActivity(unittest.TestCase):
 
         self.assertEqual(
             str(activity),
-            "test starts At 2023-04-03 18:00:00 and ends at 2023-04-03 19:00:00"
+            "test zaczyna się: 2023-04-03 18:00:00 i kończy: 2023-04-03 19:00:00"
         )
 
     def test_to_file_format(self):

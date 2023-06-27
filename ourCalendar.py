@@ -61,10 +61,10 @@ class Calendar:
         res = []
         for activity in self.activities:
             if only_inclusion:
-                if activity.start_date > start and activity.end_date < end:
+                if activity.start_date >= start and activity.end_date <= end:
                     res.append(activity)
             else:
-                if activity.end_date > start and activity.start_date < end:
+                if activity.end_date >= start and activity.start_date <= end:
                     res.append(activity)
         return res
 
