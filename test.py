@@ -36,7 +36,7 @@ class TestActivity(unittest.TestCase):
 
         self.assertEqual(
             activity.to_file_format(),
-            "test test 1680537600.0 1680541200.0"
+            "test$test$1680537600.0$1680541200.0"
         )
 
     def test_from_file_format(self):
@@ -44,7 +44,7 @@ class TestActivity(unittest.TestCase):
             Activity.from_file_format("NotAValidFormat")
 
         activity = Activity.from_file_format(
-            "test test 1680537600.0 1680541200.0")
+            "test$test$1680537600.0$1680541200.0")
         date1 = datetime(2023, 4, 3, 18)
         date2 = datetime(2023, 4, 3, 19)
 
@@ -165,14 +165,14 @@ class TestCalendar(unittest.TestCase):
         self.assertEqual(
             cal.to_file_format(),
             "test"
-            "\ntest test 1680537600.0 1680541200.0"""
+            "\ntest$test$1680537600.0$1680541200.0"""
         )
 
     def test_from_file_format(self):
 
         cal = Calendar.from_file_format(
             "test"
-            "\ntest test 1680537600.0 1680541200.0"
+            "\ntest$test$1680537600.0$1680541200.0"
         )
 
         self.assertEqual(cal.name, "test")
@@ -199,7 +199,7 @@ class TestCalendar(unittest.TestCase):
         with open("./testCalendarAutomaticLoadAndSave", 'w') as file:
             file.write(
                 "test"
-                "\ntest test 1680537600.0 1680541200.0"
+                "\ntest$test$1680537600.0$1680541200.0"
             )
         cal = Calendar("./testCalendarAutomaticLoadAndSave")
         self.assertEqual("test", cal.name)
@@ -210,7 +210,7 @@ class TestCalendar(unittest.TestCase):
         with open("./testCalendarAutomaticLoadAndSave", 'r') as file:
             self.assertEqual(
                 "test2"
-                "\ntest3 test 1680537600.0 1680541200.0",
+                "\ntest3$test$1680537600.0$1680541200.0",
                 file.read()
             )
         os.remove("./testCalendarAutomaticLoadAndSave")

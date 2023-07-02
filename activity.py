@@ -19,11 +19,11 @@ class Activity:
     # makes the fields readonly
 
     def to_file_format(self) -> str:
-        return f"{self.name} {self.place} {self.start_date.timestamp()} {self.end_date.timestamp()}"
+        return f"{self.name}${self.place}${self.start_date.timestamp()}${self.end_date.timestamp()}"
 
     @classmethod
     def from_file_format(cls, activity_srt: str):
-        data = activity_srt.split(' ')
+        data = activity_srt.split('$')
         if len(data) != 4:
             raise ValueError("data is not formatted correctly")
         name = data[0]

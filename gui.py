@@ -173,6 +173,7 @@ class CalendarGUI:
 
         event_name_entry = Entry(input_frame, width=50)
         event_name_entry.grid(row=5, column=0)
+        self.event_name_entry = event_name_entry
 
         event_place_label = Label(input_frame, text="Miejsce:")
         event_place_label.grid(row=4, column=1)
