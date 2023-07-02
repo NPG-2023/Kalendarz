@@ -3,7 +3,7 @@ from datetime import datetime
 
 class Activity:
 
-    def __init__(self, name: str, date1: datetime, date2: datetime):
+    def __init__(self, name: str, place: str, date1: datetime, date2: datetime):
         if date1 > date2:
             self._end_date = date1
             self._start_date = date2
@@ -12,23 +12,29 @@ class Activity:
             self._start_date = date1
 
         self._name = name
+        self._place = place
 
     def __str__(self) -> str:
-        return f"{self.name} zaczyna się: {self.start_date} i kończy: {self.end_date}"
+        return f"{self.name} miejsce: {self.place} zaczyna się: {self.start_date} i kończy: {self.end_date}"
     # makes the fields readonly
 
     def to_file_format(self) -> str:
-        return f"{self.name} {self.start_date.timestamp()} {self.end_date.timestamp()}"
+        return f"{self.name} {self.place} {self.start_date.timestamp()} {self.end_date.timestamp()}"
 
     @classmethod
     def from_file_format(cls, activity_srt: str):
         data = activity_srt.split(' ')
-        if len(data) != 3:
+        if len(data) != 4:
             raise ValueError("data is not formatted correctly")
         name = data[0]
-        start_timestamp = datetime.fromtimestamp(float(data[1]))
-        end_timestamp = datetime.fromtimestamp(float(data[2]))
-        return cls(name, start_timestamp, end_timestamp)
+        place = data[1]
+        start_timestamp = datetime.fromtimestamp(float(data[2]))
+        end_timestamp = datetime.fromtimestamp(float(data[3]))
+        return cls(name, place, start_timestamp, end_timestamp)
+
+    @property
+    def place(self) -> str:
+        return self._place
 
     @property
     def name(self) -> str:
@@ -43,6 +49,10 @@ class Activity:
         return self._end_date
 
     # ensures that the types are good
+    @place.setter
+    def place(self, new_place: str):
+        self._place = new_place
+
     @name.setter
     def name(self, new_name: str):
         self._name = new_name

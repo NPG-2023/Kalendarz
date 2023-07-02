@@ -37,6 +37,12 @@ class Calendar:
         else:
             raise LookupError("activity is not in a calendar")
 
+    def change_activity_place(self, activity: Activity, new_place: str):
+        if activity in self.activities:
+            activity.place = new_place
+        else:
+            raise LookupError("activity is not in a calendar")
+
     def change_activity_name(self, activity: Activity, new_name: str):
         if activity in self.activities:
             activity.name = new_name
