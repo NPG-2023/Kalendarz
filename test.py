@@ -10,9 +10,10 @@ class TestActivity(unittest.TestCase):
         date1 = datetime(2023, 4, 3, 18)
         date2 = datetime(2023, 4, 3, 19)
 
-        activity = Activity("test", date2, date1)
+        activity = Activity("test", "test", date2, date1)
 
         self.assertEqual(activity.name, "test")
+        self.assertEqual(activity.place, "test")
         self.assertEqual(activity.start_date, date1)
         self.assertEqual(activity.end_date, date2)
 
@@ -20,22 +21,22 @@ class TestActivity(unittest.TestCase):
 
         date1 = datetime(2023, 4, 3, 18)
         date2 = datetime(2023, 4, 3, 19)
-        activity = Activity("test", date2, date1)
+        activity = Activity("test", "test", date2, date1)
 
         self.assertEqual(
             str(activity),
-            "test zaczyna się: 2023-04-03 18:00:00 i kończy: 2023-04-03 19:00:00"
+            "test miejsce: test zaczyna się: 2023-04-03 18:00:00 i kończy: 2023-04-03 19:00:00"
         )
 
     def test_to_file_format(self):
 
         date1 = datetime(2023, 4, 3, 18)
         date2 = datetime(2023, 4, 3, 19)
-        activity = Activity("test", date2, date1)
+        activity = Activity("test", "test", date2, date1)
 
         self.assertEqual(
             activity.to_file_format(),
-            "test 1680537600.0 1680541200.0"
+            "test$test$1680537600.0$1680541200.0"
         )
 
     def test_from_file_format(self):
@@ -43,11 +44,12 @@ class TestActivity(unittest.TestCase):
             Activity.from_file_format("NotAValidFormat")
 
         activity = Activity.from_file_format(
-            "test 1680537600.0 1680541200.0")
+            "test$test$1680537600.0$1680541200.0")
         date1 = datetime(2023, 4, 3, 18)
         date2 = datetime(2023, 4, 3, 19)
 
         self.assertEqual(activity.name, "test")
+        self.assertEqual(activity.place, "test")
         self.assertEqual(activity.start_date, date1)
         self.assertEqual(activity.end_date, date2)
 
@@ -62,6 +64,7 @@ class TestCalendar(unittest.TestCase):
         calendar = Calendar("", "test")
         activity = Activity(
             "t",
+            "t",
             datetime(2023, 4, 3, 18),
             datetime(2023, 4, 3, 19)
         )
@@ -71,6 +74,7 @@ class TestCalendar(unittest.TestCase):
     def test_remove_activity(self):
         calendar = Calendar("", "test")
         activity = Activity(
+            "t",
             "t",
             datetime(2023, 4, 3, 18),
             datetime(2023, 4, 3, 19)
@@ -85,6 +89,7 @@ class TestCalendar(unittest.TestCase):
         calendar = Calendar("", "test")
         activity = Activity(
             "t",
+            "t",
             datetime(2023, 4, 3, 18),
             datetime(2023, 4, 3, 19)
         )
@@ -92,9 +97,22 @@ class TestCalendar(unittest.TestCase):
         calendar.change_activity_name(activity, "new name")
         self.assertEqual("new name", calendar.activities[0].name)
 
+    def test_edit_place_activity(self):
+        calendar = Calendar("", "test")
+        activity = Activity(
+            "t",
+            "t2",
+            datetime(2023, 4, 3, 18),
+            datetime(2023, 4, 3, 19)
+        )
+        calendar.add_activity(activity)
+        calendar.change_activity_place(activity, "new place")
+        self.assertEqual("new place", calendar.activities[0].place)
+
     def test_edit_date_activity(self):
         calendar = Calendar("", "test")
         activity = Activity(
+            "t",
             "t",
             datetime(2023, 4, 3, 18),
             datetime(2023, 4, 3, 19)
@@ -110,10 +128,12 @@ class TestCalendar(unittest.TestCase):
         calendar = Calendar("", "test")
         activity1 = Activity(
             "t",
+            "t",
             datetime(2023, 4, 3, 18),
             datetime(2023, 4, 3, 19)
         )
         activity2 = Activity(
+            "t",
             "t",
             datetime(2023, 4, 4, 18),
             datetime(2023, 4, 4, 19)
@@ -140,19 +160,19 @@ class TestCalendar(unittest.TestCase):
 
         date1 = datetime(2023, 4, 3, 18)
         date2 = datetime(2023, 4, 3, 19)
-        cal.add_activity(Activity("test", date2, date1))
+        cal.add_activity(Activity("test", "test", date2, date1))
 
         self.assertEqual(
             cal.to_file_format(),
             "test"
-            "\ntest 1680537600.0 1680541200.0"""
+            "\ntest$test$1680537600.0$1680541200.0"""
         )
 
     def test_from_file_format(self):
 
         cal = Calendar.from_file_format(
             "test"
-            "\ntest 1680537600.0 1680541200.0"
+            "\ntest$test$1680537600.0$1680541200.0"
         )
 
         self.assertEqual(cal.name, "test")
@@ -163,7 +183,7 @@ class TestCalendar(unittest.TestCase):
         cal = Calendar("", "test")
         date1 = datetime(2023, 4, 3, 18)
         date2 = datetime(2023, 4, 3, 19)
-        activity = Activity("activity", date1, date2)
+        activity = Activity("activity", "test", date1, date2)
         cal.add_activity(activity)
 
         cal.save_to_file("./testCalendarSaveAndLoadFromFile.txt")
@@ -179,7 +199,7 @@ class TestCalendar(unittest.TestCase):
         with open("./testCalendarAutomaticLoadAndSave", 'w') as file:
             file.write(
                 "test"
-                "\ntest 1680537600.0 1680541200.0"
+                "\ntest$test$1680537600.0$1680541200.0"
             )
         cal = Calendar("./testCalendarAutomaticLoadAndSave")
         self.assertEqual("test", cal.name)
@@ -190,7 +210,7 @@ class TestCalendar(unittest.TestCase):
         with open("./testCalendarAutomaticLoadAndSave", 'r') as file:
             self.assertEqual(
                 "test2"
-                "\ntest3 1680537600.0 1680541200.0",
+                "\ntest3$test$1680537600.0$1680541200.0",
                 file.read()
             )
         os.remove("./testCalendarAutomaticLoadAndSave")

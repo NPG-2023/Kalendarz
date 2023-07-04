@@ -1,12 +1,16 @@
 from tkinter import *
 from tkcalendar import *
-from datetime import datetime
+from tkinter import filedialog
+from datetime import datetime, timedelta
 # from tkinter import messagebox
 from activity import Activity
+from ourCalendar import Calendar as ourCalendar
+import os
 
 
 class CalendarGUI:
-    def __init__(self, master, calendar):
+    def __init__(self, master, calendar, settings):
+        self.settings = settings
         self.master = master
         self.my_label = Label(self.master, text=f"Selected Date: ")
         self.master.geometry("600x600")
@@ -20,6 +24,19 @@ class CalendarGUI:
         self.event_info_label = Label(self.master, text="")
         self.event_info_label.pack(pady=10)
 
+        self.file_frame = Frame(self.master)
+        self.file_frame.pack(side=BOTTOM, pady=10)
+        self.choose_file_button = Button(self.file_frame, text="wybierz plik", command=self.choose_file)
+        self.choose_file_button.grid(row=1, columnspan=2, column=0)
+        self.file_label = Label(self.file_frame, text=f"plik zapisu to: {self.settings.calendar_path}")
+        self.file_label.grid(row=0, columnspan=2, column=0)
+        self.save_button = Button(self.file_frame, text="zapisz", command=self.save_to_file)
+        self.save_button.grid(row=2, column=0)
+        self.save_button = Button(self.file_frame, text="załaduj", command=self.load_from_file)
+        self.save_button.grid(row=2, column=1)
+
+        self.cal.tag_config('event', background='lightblue', foreground='black')
+
         self.input_frame = None
         self.activity_list = None
         self.data = {}
@@ -28,8 +45,40 @@ class CalendarGUI:
         self.event_start_hour_entry = None
         self.event_end_hour_entry = None
         self.event_name_entry = None
+        self.event_place_entry = None
+
+        self.color_calendar()
 
         self.cal.bind("<<CalendarSelected>>", self.show_events)
+        self.cal.bind("<<CalendarMonthChanged>>", self.color_calendar)
+
+    def color_calendar(self, *args):
+        self.cal.calevent_remove("all")
+        curr_month = self.cal.get_displayed_month()
+        start_datetime = datetime(curr_month[1], curr_month[0], 1)
+        while start_datetime.month == curr_month[0]:
+            if len(self.calendar.get_activities_from_range(
+                    start_datetime,
+                    start_datetime + timedelta(hours=23, minutes=59),
+                    only_inclusion=False)) != 0:
+                self.cal.calevent_create(start_datetime, tags='event', text="")
+            start_datetime += timedelta(days=1)
+
+    def choose_file(self):
+        filename = filedialog.askopenfilename(
+            initialdir="./",
+            title="Wybierz plik",
+            filetypes=(("plik tekstowy", "*.txt*"),))
+        relative_path = "./" + os.path.relpath(filename, "./")
+        self.settings.calendar_path = relative_path
+        self.file_label.config(text=f"plik zapisu to: {self.settings.calendar_path}")
+
+    def save_to_file(self):
+        self.calendar.save_to_file(self.settings.calendar_path)
+
+    def load_from_file(self):
+        self.calendar = ourCalendar.load_from_file(self.settings.calendar_path)
+        self.color_calendar()
 
     def show_events(self, *args):
         date = self.cal.get_date()
@@ -62,6 +111,7 @@ class CalendarGUI:
             def on_del():
                 self.calendar.remove_activity(act)
                 self.show_events()
+                self.color_calendar()
 
             del_button = Button(
                 activity_list,
@@ -119,11 +169,18 @@ class CalendarGUI:
         self.event_end_hour_entry = event_end_hour_entry
 
         event_name_label = Label(input_frame, text="Nazwa:")
-        event_name_label.grid(row=4, column=0, columnspan=2)
+        event_name_label.grid(row=4, column=0)
 
         event_name_entry = Entry(input_frame, width=50)
-        event_name_entry.grid(row=5, column=0, columnspan=2)
+        event_name_entry.grid(row=5, column=0)
         self.event_name_entry = event_name_entry
+
+        event_place_label = Label(input_frame, text="Miejsce:")
+        event_place_label.grid(row=4, column=1)
+
+        event_place_entry = Entry(input_frame, width=50)
+        event_place_entry.grid(row=5, column=1)
+        self.event_place_entry = event_place_entry
 
     def add_event(self):
         self.render_input_frame()
@@ -136,6 +193,7 @@ class CalendarGUI:
         end_date = self.event_end_date_entry.get()
         end_hour = self.event_end_hour_entry.get()
         name = self.event_name_entry.get()
+        place = self.event_place_entry.get()
 
         if start_hour == "" or end_hour == "":
             self.event_info_label.config(text="Podaj obie godziny!")
@@ -156,13 +214,15 @@ class CalendarGUI:
             int(end_hour.split(':')[1]))
 
         if act is None:
-            self.calendar.add_activity(Activity(name, start_datetime, end_datetime))
+            self.calendar.add_activity(Activity(name, place, start_datetime, end_datetime))
         else:
             self.calendar.change_activity_dates(act, start_datetime, end_datetime)
             self.calendar.change_activity_name(act, name)
+            self.calendar.change_activity_place(act, place)
 
         self.input_frame.destroy()
         self.input_frame = None
+        self.color_calendar()
 
     def edit_event(self, activity_to_edit):
         self.render_input_frame()
@@ -182,6 +242,7 @@ class CalendarGUI:
             0,
             format(activity_to_edit.end_date.hour, '02') + ":" + format(activity_to_edit.end_date.minute, '02'))
         self.event_name_entry.insert(0, activity_to_edit.name)
+        self.event_place_entry.insert(0, activity_to_edit.place)
 
         save_button = Button(self.input_frame, text="Zapisz Zmiany", command=lambda: self.save_event(activity_to_edit))
         save_button.grid(row=6, column=0, columnspan=2)

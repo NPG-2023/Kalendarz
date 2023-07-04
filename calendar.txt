@@ -1,0 +1,14 @@
+Kalendarz
+Nowy Rok$Cala Polska$1672527600.0$1672613940.0
+Swieto Trzech Kroli$Cala Polska$1672959600.0$1673045940.0
+Pierwszy Dzien Wielkiej Nocy$Cala Polska$1680991200.0$1681077540.0
+Drugi Dzien Wielkiej Nocy$Cala Polska$1681077600.0$1681163940.0
+Swieto Panstwowe$Cala Polska$1682892000.0$1682978340.0
+Swieto Narodowe Trzeciego Maja$Cala Polska$1683064800.0$1683151140.0
+Zielone Swiatki$Cala Polska$1685224800.0$1685311140.0
+Boze Cialo$Cala Polska$1686175200.0$1686261540.0
+Wniebowziecie Najswietszej Maryi Panny$Cala Polska$1692050400.0$1692136740.0
+Wszystkich Swietych$Cala Polska$1698793200.0$1698879540.0
+Narodowe Swieto NiepodlegloSci$Cala Polska$1699657200.0$1699743540.0
+Pierwszy Dzien Bozego Narodzenia$Cala Polska$1703458800.0$1703545140.0
+Drogi Dzien Bozego Narodzenia$Cala Polska$1703545200.0$1703631540.0

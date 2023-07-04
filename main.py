@@ -8,7 +8,7 @@ def main():
     settings = Settings()
     calendar = Calendar(settings.calendar_path)
     root = Tk()
-    my_gui = CalendarGUI(root, calendar)
+    my_gui = CalendarGUI(root, calendar, settings)
     root.mainloop()
 
 
