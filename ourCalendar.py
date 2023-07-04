@@ -18,6 +18,8 @@ class Calendar:
             self.name = name
             self.activities = []
 
+        self.add_auto_generated_holidays()
+
     def __del__(self):
         if not self.path:
             return
@@ -129,6 +131,12 @@ class Calendar:
         month = (h + l - 7 * m + 114) // 31
         day = ((h + l - 7 * m + 114) % 31) + 1
         return datetime(year, month, day)
+
+    def add_auto_generated_holidays(self):
+        current_year = datetime.now().year
+        holidays = self.get_polish_holidays(current_year)
+        for holiday in holidays:
+            self.add_activity(holiday)
 
     def to_file_format(self):
         contents = f"{self.name}"
