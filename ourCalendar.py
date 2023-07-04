@@ -18,7 +18,7 @@ class Calendar:
             self.name = name
             self.activities = []
 
-        self.add_auto_generated_holidays()
+        self.add_auto_generated_holidays(datetime.now().year -2,datetime.now().year +30)
 
     def __del__(self):
         if not self.path:
@@ -98,7 +98,9 @@ class Calendar:
         for name, date in self.POLISH_HOLIDAYS.items():
             if date is None:
                 date = self.calculate_holiday_date(year, name)
-            activity = Activity(name, date, date)
+            else:
+                date = datetime(year, date[1], date[0])
+            activity = Activity(name, "Cala Polska", date, date)
             polish_holidays.append(activity)
         return polish_holidays
 
@@ -132,11 +134,19 @@ class Calendar:
         day = ((h + l - 7 * m + 114) % 31) + 1
         return datetime(year, month, day)
 
-    def add_auto_generated_holidays(self):
-        current_year = datetime.now().year
-        holidays = self.get_polish_holidays(current_year)
-        for holiday in holidays:
-            self.add_activity(holiday)
+    def add_auto_generated_holidays(self, start_year: int, end_year: int):
+        for year in range(start_year, end_year + 1):
+            holidays = self.get_polish_holidays(year)
+            for holiday in holidays:
+                if not self.is_activity_in_calendar(holiday):
+                    activity = Activity(holiday.name, "Cala Polska", holiday.start_date, holiday.end_date)
+                    self.add_activity(activity)
+
+    def is_activity_in_calendar(self, activity: Activity) -> bool:
+        for existing_activity in self.activities:
+            if existing_activity.name == activity.name and existing_activity.start_date == activity.start_date:
+                return True
+        return False
 
     def to_file_format(self):
         contents = f"{self.name}"
