@@ -23,8 +23,7 @@ Praca została podzielona na podzadania, które zostały wykonane przez następu
   - Stworzenie podstawowej funkcjonalności bez GUI
   - Pamięć pomiędzy otwarciami programu
   - Możliwość zapisu i wczytania danych z pliku wybranego przez użytkownika
-  - Zrobienie UI Wydarzeń
-  - Dodanie świąt 
+  - Zrobienie UI Wydarzeń 
   - dopracowanie UI dodawania wydarzeń
   - dopracowanie UI edycji i usuwania wydarzeń
   - UI możliwości wybrania pliku do zapisu
@@ -38,6 +37,7 @@ Praca została podzielona na podzadania, które zostały wykonane przez następu
     - Podstawowe UI dodawania i edycji wydarzeń
 - Wiktor Matykiewicz
     - Edycja i Usuwanie wydarzeń
+    - Automatyczne dodawanie świąt
 
 Pracując z githubem nasz główny branch był chroniony, nie można było commitować bezpośrednio.
 Pull requesty do tego brancha musiały zostać zaakceptowane przez co najmniej dwóch członków zespołu.
