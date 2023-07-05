@@ -1,4 +1,3 @@
-# this file name is strange because calendar is taken by python standard library
 from datetime import datetime, timedelta
 from activity import Activity
 from typing import List
@@ -169,9 +168,18 @@ class Calendar:
     @classmethod
     def load_from_file(cls, path: str):
         with open(path, 'r') as file:
-            return cls.from_file_format(file.read())
+            contents = file.read()
+        lines = contents.split("\n")
+        if len(lines) > 1:
+            events = lines[1:]
+            events = [event for event in events if not Calendar.is_polish_holiday(event)]
+            contents = "\n".join([lines[0]] + events)
 
+        return cls.from_file_format(contents)
 
-
-
+    @staticmethod
+    def is_polish_holiday(event: str) -> bool:
+        polish_holidays = set(Calendar.POLISH_HOLIDAYS.keys())
+        event_name = event.split("$")[0]
+        return event_name in polish_holidays
 
